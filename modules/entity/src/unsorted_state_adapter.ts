@@ -1,4 +1,10 @@
-import { EntityState, EntityStateAdapter, IdSelector, Update } from './models';
+import {
+  EntityState,
+  EntityStateAdapter,
+  IdSelector,
+  Update,
+  Upsert,
+} from './models';
 import { createStateOperator } from './state_adapter';
 
 export function createUnsortedStateAdapter<T>(
@@ -112,12 +118,12 @@ export function createUnsortedStateAdapter<T>(selectId: IdSelector<T>): any {
     return didMutate;
   }
 
-  function upsertOneMutably(update: Update<T>, state: R): boolean;
+  function upsertOneMutably(update: Upsert<T>, state: R): boolean;
   function upsertOneMutably(update: any, state: any): boolean {
     return upsertManyMutably([update], state);
   }
 
-  function upsertManyMutably(updates: Update<T>[], state: R): boolean;
+  function upsertManyMutably(updates: Upsert<T>[], state: R): boolean;
   function upsertManyMutably(updates: any[], state: any): boolean {
     const added: T[] = [];
     const updated: Update<T>[] = [];

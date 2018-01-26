@@ -38,6 +38,18 @@ export type UpdateNum<T> = {
 
 export type Update<T> = UpdateStr<T> | UpdateNum<T>;
 
+export type UpsertStr<T> = {
+  id: string;
+  changes: T;
+};
+
+export type UpsertNum<T> = {
+  id: number;
+  changes: T;
+};
+
+export type Upsert<T> = UpsertStr<T> | UpsertNum<T>;
+
 export interface EntityState<T> {
   ids: string[] | number[];
   entities: Dictionary<T>;
@@ -50,21 +62,27 @@ export interface EntityDefinition<T> {
 
 export interface EntityStateAdapter<T> {
   addOne<S extends EntityState<T>>(entity: T, state: S): S;
+
   addMany<S extends EntityState<T>>(entities: T[], state: S): S;
+
   addAll<S extends EntityState<T>>(entities: T[], state: S): S;
 
   removeOne<S extends EntityState<T>>(key: string, state: S): S;
+
   removeOne<S extends EntityState<T>>(key: number, state: S): S;
 
   removeMany<S extends EntityState<T>>(keys: string[], state: S): S;
+
   removeMany<S extends EntityState<T>>(keys: number[], state: S): S;
 
   removeAll<S extends EntityState<T>>(state: S): S;
 
   updateOne<S extends EntityState<T>>(update: Update<T>, state: S): S;
+
   updateMany<S extends EntityState<T>>(updates: Update<T>[], state: S): S;
 
   upsertOne<S extends EntityState<T>>(update: Update<T>, state: S): S;
+
   upsertMany<S extends EntityState<T>>(updates: Update<T>[], state: S): S;
 }
 
@@ -77,8 +95,11 @@ export type EntitySelectors<T, V> = {
 
 export interface EntityAdapter<T> extends EntityStateAdapter<T> {
   getInitialState(): EntityState<T>;
+
   getInitialState<S extends object>(state: S): EntityState<T> & S;
+
   getSelectors(): EntitySelectors<T, EntityState<T>>;
+
   getSelectors<V>(
     selectState: (state: V) => EntityState<T>
   ): EntitySelectors<T, V>;
